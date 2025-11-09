@@ -1,28 +1,32 @@
-<h1 align="center">Welcome to public-api-restassured 👋</h1>
-<p>
-  <img alt="Version" src="https://img.shields.io/badge/version-1.0.0-blue.svg?cacheSeconds=2592000" />
-  <a href="https://gorest.co.in/" target="_blank">
-    <img alt="Documentation" src="https://img.shields.io/badge/documentation-yes-brightgreen.svg" />
-  </a>
-</p>
+<h1 align="center">public-api-restassured</h1>
+<p align="center">
+    <img alt="Version" src="https://img.shields.io/badge/version-2.0.0-blue.svg?cacheSeconds=2592000" />
+    <a href="https://gorest.co.in/" target="_blank">
+        <img alt="API" src="https://img.shields.io/badge/API-GoRest-blueviolet.svg" /> </a>
+        <img alt="Build" src="https://github.com/jussaragranja/public-api-restassured/actions/workflows/ci.yml/badge.svg" />
+        <img alt="Allure Report" src="https://img.shields.io/badge/Allure-Report-orange.svg" /> </p> <p align="center">
+    <b>Automated API testing project using Java, Maven, RestAssured, and JUnit5 for the
+    <a href="https://gorest.co.in/">GoRest Public API</a>.</b> </p>
 
-> Test project using Java, Maven, Rest-Assured and JUnit5, to test the Public Api GoRest
+## 🚀 Overview
 
-### 🏠 [PUBLIC-API Gorest](https://gorest.co.in/)
+> This project provides a robust and maintainable framework for automated API testing of the GoRest Public API, following Clean Code and best practices.
+
+## 🧰 Tech Stack
+
+- [Java 11](https://www.java.com/)
+- [Maven](https://maven.apache.org)
+- [RestAssured](https://github.com/rest-assured/rest-assured/wiki/Usage)
+- [JUnit5](https://junit.org/junit5/docs/current/user-guide/)
+- [Lombok](https://projectlombok.org/features/all)
+- [Allure](https://docs.qameta.io/allure/)
+- <img alt="GitHub Actions" src="https://img.shields.io/badge/GitHub-Actions-blue?logo=github-actions" />
 
 ## Run tests
 
 ```sh
 mvn test
 ```
-
-## Frameworks e Tools
-
-- [Java](https://www.java.com/pt_BR)
-- [Maven](https://maven.apache.org)
-- [RestAssured](https://github.com/rest-assured/rest-assured/wiki/Usage)
-- [JUnit5](https://junit.org/junit5/docs/current/user-guide/)
-- [Lombok](https://projectlombok.org/features/all)
 
 ## Author
 
