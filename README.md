@@ -3,7 +3,7 @@
     <img alt="Version" src="https://img.shields.io/badge/version-2.0.0-blue.svg?cacheSeconds=2592000" />
     <a href="https://gorest.co.in/" target="_blank">
         <img alt="API" src="https://img.shields.io/badge/API-GoRest-blueviolet.svg" /> </a>
-        <img alt="Build" src="https://github.com/jussaragranja/public-api-restassured/actions/workflows/ci.yml/badge.svg" />
+        <img alt="Build" src="https://github.com/jussaragranja/public-api-test-restassured/actions/workflows/ci.yml/badge.svg" />
         <img alt="Allure Report" src="https://img.shields.io/badge/Allure-Report-orange.svg" /> </p> <p align="center">
     <b>Automated API testing project using Java, Maven, RestAssured, and JUnit5 for the
     <a href="https://gorest.co.in/">GoRest Public API</a>.</b> </p>
