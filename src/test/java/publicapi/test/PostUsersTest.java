@@ -1,17 +1,16 @@
 package publicapi.test;
 
-import io.restassured.http.ContentType;
 import org.apache.http.HttpStatus;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import publicapi.core.BaseTest;
+import publicapi.factory.UserFactory;
+import publicapi.support.Constants;
+import publicapi.support.UserUtils;
+import publicapi.support.Util;
 
-import static io.restassured.RestAssured.given;
 import static org.hamcrest.Matchers.equalTo;
-import static org.junit.Assert.assertTrue;
-import static publicapi.factory.UserFactory.userExist;
-import static publicapi.factory.UserFactory.validBody;
-import static publicapi.support.Constants.*;
-import static publicapi.support.Util.randomValue;
 
 /**
  * @author jussaragranja
@@ -20,62 +19,57 @@ import static publicapi.support.Util.randomValue;
 
 public class PostUsersTest extends BaseTest {
 
-    public int random = randomValue(10000);
-
     @Test
-    public void return201_createNewUser(){
+    @DisplayName("Deve criar novo usuário e retornar 201")
+    void shouldCreateNewUserAndReturn201() {
+        int random = Util.randomValue(10000);
 
-        given()
-            .header(AUTHORIZATION, BEARER_TOKEN.concat(TOKEN))
-            .contentType(ContentType.JSON)
-            .body(validBody(random).toString())
-        .when()
-            .post(PATH_USERS)
-        .then()
-            .statusCode(HttpStatus.SC_OK)
-            .body(CODE, equalTo(HttpStatus.SC_CREATED));
-
+        requestSpec
+                .body(UserFactory.createValidUser(random).toString())
+                .when()
+                .post(Constants.PATH_USERS)
+                .then()
+                .statusCode(HttpStatus.SC_OK)
+                .body(Constants.CODE, equalTo(HttpStatus.SC_CREATED));
     }
 
     @Test
-    public void return201_createNewUserAssert(){
+    @DisplayName("Deve criar novo usuário e verificar existência")
+    void shouldCreateNewUserAndAssertExistence() {
+        int random = Util.randomValue(10000);
 
-        int id = given()
-            .header(AUTHORIZATION, BEARER_TOKEN.concat(TOKEN))
-            .contentType(ContentType.JSON)
-            .body(validBody(random).toString())
-        .when()
-            .post(PATH_USERS)
-        .then()
-            .statusCode(HttpStatus.SC_OK)
-            .body(CODE, equalTo(HttpStatus.SC_CREATED)).extract().path("data.id");
+        int id = requestSpec
+                .body(UserFactory.createValidUser(random).toString())
+                .when()
+                .post(Constants.PATH_USERS)
+                .then()
+                .statusCode(HttpStatus.SC_OK)
+                .body(Constants.CODE, equalTo(HttpStatus.SC_CREATED))
+                .extract().path("data.id");
 
-        assertTrue(userExist(id));
+        Assertions.assertTrue(UserUtils.userExists(requestSpec, id));
     }
 
     @Test
-    public void return422_createNewUserBlank(){
-
-        given()
-            .header(AUTHORIZATION, BEARER_TOKEN.concat(TOKEN))
-            .contentType(ContentType.JSON)
-            .body("{}")
-        .when()
-            .post(PATH_USERS)
-        .then()
-            .body(CODE, equalTo(HttpStatus.SC_UNPROCESSABLE_ENTITY));
+    @DisplayName("Deve retornar 422 ao criar usuário com body vazio")
+    void shouldReturn422ForBlankBody() {
+        requestSpec
+                .body("{}")
+                .when()
+                .post(Constants.PATH_USERS)
+                .then()
+                .statusCode(HttpStatus.SC_OK)
+                .body(Constants.CODE, equalTo(HttpStatus.SC_UNPROCESSABLE_ENTITY));
     }
 
     @Test
-    public void return422_createNewUserNull(){
-
-        given()
-            .header(AUTHORIZATION, BEARER_TOKEN.concat(TOKEN))
-            .contentType(ContentType.JSON)
-        .when()
-            .post(PATH_USERS)
-        .then()
-            .body(CODE, equalTo(HttpStatus.SC_UNPROCESSABLE_ENTITY));
+    @DisplayName("Deve retornar 422 ao criar usuário sem body")
+    void shouldReturn422ForNullBody() {
+        requestSpec
+                .when()
+                .post(Constants.PATH_USERS)
+                .then()
+                .statusCode(HttpStatus.SC_OK)
+                .body(Constants.CODE, equalTo(HttpStatus.SC_UNPROCESSABLE_ENTITY));
     }
-
 }
