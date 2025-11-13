@@ -7,6 +7,9 @@ package publicapi.support;
 
 public class Constants {
 
+    //BASE URI
+    public static final String BASE_URI = "https://gorest.co.in/public-api";
+
     //PATHS
     public static final String PATH_USERS = "/users";
     public static final String PATH_USERS_ID = "/users/{id}";

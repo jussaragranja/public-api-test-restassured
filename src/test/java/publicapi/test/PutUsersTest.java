@@ -1,19 +1,18 @@
 package publicapi.test;
 
-import io.restassured.http.ContentType;
 import org.apache.http.HttpStatus;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import publicapi.core.BaseTest;
+import publicapi.factory.UserFactory;
 import publicapi.model.UserModel;
+import publicapi.support.Constants;
+import publicapi.support.UserUtils;
+import publicapi.support.Util;
 
 import java.util.List;
 
-import static io.restassured.RestAssured.given;
 import static org.hamcrest.Matchers.equalTo;
-import static publicapi.factory.UserFactory.getUser;
-import static publicapi.factory.UserFactory.validBodyEmail;
-import static publicapi.support.Constants.*;
-import static publicapi.support.Util.randomValue;
 
 /**
  * @author jussaragranja
@@ -22,37 +21,34 @@ import static publicapi.support.Util.randomValue;
 
 public class PutUsersTest extends BaseTest {
 
-    public int random = randomValue(10000);
-
     @Test
-    public void return200_updateUser(){
+    @DisplayName("Deve atualizar usuário existente e retornar 200")
+    void shouldUpdateUserAndReturn200() {
+        int random = Util.randomValue(10000);
+        List<UserModel> users = UserUtils.getUsers(requestSpec);
 
-        List<UserModel> userModelList = getUser();
-
-        given()
-            .header(AUTHORIZATION, BEARER_TOKEN.concat(TOKEN))
-            .contentType(ContentType.JSON)
-            .pathParam(ID, userModelList.get(0).getId())
-            .body(validBodyEmail(random).toString())
-        .when()
-            .put(PATH_USERS_ID)
-        .then()
-            .statusCode(HttpStatus.SC_OK)
-            .body(CODE, equalTo(HttpStatus.SC_OK));
+        requestSpec
+                .pathParam(Constants.ID, users.get(0).getId())
+                .body(UserFactory.createValidEmail(random).toString())
+                .when()
+                .put(Constants.PATH_USERS_ID)
+                .then()
+                .statusCode(HttpStatus.SC_OK)
+                .body(Constants.CODE, equalTo(HttpStatus.SC_OK));
     }
 
     @Test
-    public void return404_updateUserNotExist(){
+    @DisplayName("Deve retornar 404 ao tentar atualizar usuário inexistente")
+    void shouldReturn404ForNonExistentUser() {
+        int random = Util.randomValue(10000);
 
-        given()
-            .header(AUTHORIZATION, BEARER_TOKEN.concat(TOKEN))
-            .contentType(ContentType.JSON)
-            .pathParam(ID, INVALID_ID)
-            .body(validBodyEmail(random).toString())
-        .when()
-            .put(PATH_USERS_ID)
-        .then()
-            .body(CODE, equalTo(HttpStatus.SC_NOT_FOUND));
+        requestSpec
+                .pathParam(Constants.ID, Constants.INVALID_ID)
+                .body(UserFactory.createValidEmail(random).toString())
+                .when()
+                .put(Constants.PATH_USERS_ID)
+                .then()
+                .statusCode(HttpStatus.SC_OK)
+                .body(Constants.CODE, equalTo(HttpStatus.SC_NOT_FOUND));
     }
-
 }

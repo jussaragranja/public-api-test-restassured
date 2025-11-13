@@ -1,19 +1,17 @@
 package publicapi.test;
 
-import io.restassured.http.ContentType;
 import org.apache.http.HttpStatus;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import publicapi.core.BaseTest;
 import publicapi.model.UserModel;
+import publicapi.support.Constants;
+import publicapi.support.UserUtils;
 
 import java.util.List;
 
-import static io.restassured.RestAssured.given;
 import static org.hamcrest.Matchers.equalTo;
-import static org.junit.Assert.assertTrue;
-import static publicapi.factory.UserFactory.getUser;
-import static publicapi.factory.UserFactory.userNotExist;
-import static publicapi.support.Constants.*;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 
 /**
  * @author jussaragranja
@@ -23,51 +21,30 @@ import static publicapi.support.Constants.*;
 public class DeleteUsersTest extends BaseTest {
 
     @Test
-    public void return204_deleteUser(){
+    @DisplayName("Deve deletar usuário existente e retornar 204")
+    void shouldDeleteUserAndReturn204() {
+        List<UserModel> users = UserUtils.getUsers(requestSpec);
+        int userId = users.get(0).getId();
 
-        List<UserModel> userModelList = getUser();
+        requestSpec.pathParam(Constants.ID, String.valueOf(userId))
+                .when()
+                .delete(Constants.PATH_USERS_ID)
+                .then()
+                .statusCode(HttpStatus.SC_OK)
+                .body(Constants.CODE, equalTo(HttpStatus.SC_NO_CONTENT));
 
-        given()
-            .header(AUTHORIZATION, BEARER_TOKEN.concat(TOKEN))
-            .contentType(ContentType.JSON)
-            .pathParam(ID, userModelList.get(0).getId())
-        .when()
-            .delete(PATH_USERS_ID)
-        .then()
-            .statusCode(HttpStatus.SC_OK)
-            .body(CODE, equalTo(HttpStatus.SC_NO_CONTENT));
+        assertFalse(UserUtils.userExists(requestSpec, userId));
     }
 
     @Test
-    public void return204_deleteUserAssert(){
-
-        List<UserModel> userModelList = getUser();
-        int idUser = userModelList.get(0).getId();
-
-        given()
-            .header(AUTHORIZATION, BEARER_TOKEN.concat(TOKEN))
-            .contentType(ContentType.JSON)
-            .pathParam(ID, idUser)
-        .when()
-            .delete(PATH_USERS_ID)
-        .then()
-            .statusCode(HttpStatus.SC_OK)
-            .body(CODE, equalTo(HttpStatus.SC_NO_CONTENT));
-
-        assertTrue(userNotExist(idUser));
-    }
-
-    @Test
-    public void return404_deleteUserNotExist(){
-
-        given()
-            .header(AUTHORIZATION, BEARER_TOKEN.concat(TOKEN))
-            .contentType(ContentType.JSON)
-            .pathParam(ID, INVALID_ID)
-        .when()
-            .delete(PATH_USERS_ID)
-        .then()
-            .body(CODE, equalTo(HttpStatus.SC_NOT_FOUND));
+    @DisplayName("Deve retornar 404 ao tentar deletar usuário inexistente")
+    void shouldReturn404ForNonExistentUser() {
+        requestSpec.pathParam(Constants.ID, Constants.INVALID_ID)
+                .when()
+                .delete(Constants.PATH_USERS_ID)
+                .then()
+                .statusCode(HttpStatus.SC_OK)
+                .body(Constants.CODE, equalTo(HttpStatus.SC_NOT_FOUND));
     }
 
 }
